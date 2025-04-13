@@ -1,0 +1,17 @@
+
+spring:
+  config:
+    import: "application-secret.yml"
+  application:
+    name: Travelrithm
+
+  jpa:
+    show-sql: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8081
+
+
+
