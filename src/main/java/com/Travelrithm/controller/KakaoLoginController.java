@@ -1,6 +1,7 @@
 package com.Travelrithm.controller;
 
 
+import com.Travelrithm.dto.KakaoUserResponseDto;
 import com.Travelrithm.service.KakaoLoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,28 +14,27 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @Controller
+@RequestMapping("/api/kakao")
 public class KakaoLoginController {
     private final KakaoLoginService kakaoLoginService;
 
-    @Value("${kakao.client_id}")
-    private String client_id;
 
-    @Value("${kakao.redirect_uri}")
-    private String redirect_uri;
-
-    @GetMapping("/login/page")
+    @GetMapping("/login")
     public String loginPage(Model model) {
         String location = kakaoLoginService.buildAuthorizeUrl();
         model.addAttribute("location", location);
         return "login";
     }
 
+
     @ResponseBody
     @GetMapping("/callback")
     public ResponseEntity<?> callback(@RequestParam("code") String code){
         String accessToken = kakaoLoginService.getAccessToken(code);
-        kakaoLoginService.getUserInfo(accessToken);
-        return new ResponseEntity<>(HttpStatus.OK);
+        KakaoUserResponseDto userInfo = kakaoLoginService.getUserInfo(accessToken);
+        return new ResponseEntity<>(userInfo.id(), HttpStatus.OK);
     }
+
+
 
 }
