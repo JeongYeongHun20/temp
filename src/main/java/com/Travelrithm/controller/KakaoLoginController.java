@@ -12,6 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RequiredArgsConstructor
 @Controller
@@ -23,11 +26,11 @@ public class KakaoLoginController {
 
 
     @GetMapping("/login")
-    public String loginPage(Model model) {
+    public ResponseEntity<Map<String, String>> loginPage(Model model) {
         String location = kakaoLoginService.buildAuthorizeUrl();
-        model.addAttribute("location", location);
-        log.info(location);
-        return "login";
+        Map<String, String> response = new HashMap<>();
+        response.put("location",location);
+        return ResponseEntity.ok(response);
     }
 
 
