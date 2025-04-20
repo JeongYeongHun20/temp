@@ -29,6 +29,7 @@ public class KakaoLoginService {
 
     private final String KAKAO_BASE_URL = "https://kauth.kakao.com";
     private final String KAKAO_USER_URL = "https://kapi.kakao.com";
+
     public String buildAuthorizeUrl(){
         return UriComponentsBuilder.fromUriString(KAKAO_BASE_URL)
                 .path("/oauth/authorize")
