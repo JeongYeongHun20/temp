@@ -8,7 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="users")
+@Table(name="user")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)// Builder로만 접근 가능
