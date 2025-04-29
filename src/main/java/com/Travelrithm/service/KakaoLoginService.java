@@ -77,7 +77,6 @@ public class KakaoLoginService {
                 .block();
 
 
-        log.info("[Kakao Servic] ID: "+ userInfo.id());
         return userInfo;
     }
 

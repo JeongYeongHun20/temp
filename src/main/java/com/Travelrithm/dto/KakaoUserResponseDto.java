@@ -10,6 +10,23 @@ import java.util.Date;
 public record KakaoUserResponseDto(
         Long id,
         Boolean has_signed_up,
-        Date connected_at
-//      properties, kakao_account, for_partner은 추가적으로 dto 생성해서 받아야함
-) { }
+        Date connected_at,
+        KakaoAccount kakao_account
+) {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record KakaoAccount(
+        String email,
+        String name,
+        Profile profile
+    ){
+        @JsonIgnoreProperties(ignoreUnknown = true)
+        public record Profile(
+            String nickname,
+            String thumbnail_image_url,
+            String profile_image_url
+        ){}
+
+    }
+
+
+}

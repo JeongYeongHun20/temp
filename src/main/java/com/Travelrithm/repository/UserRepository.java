@@ -1,12 +1,13 @@
 package com.Travelrithm.repository;
 
-import com.Travelrithm.domain.UserInfo;
+import com.Travelrithm.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserInfo, Long> {
-        Optional<UserInfo> findByName(String name);
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+        Optional<UserEntity> findByName(String name);
+        Optional<UserEntity> findByEmail(String email);
 }
