@@ -7,9 +7,7 @@ import com.Travelrithm.service.KakaoLoginService;
 import com.Travelrithm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -37,7 +35,7 @@ public class KakaoLoginController {
     public ResponseEntity<UserResponseDto> callback(@RequestParam("code") String code){
         String accessToken = kakaoLoginService.getAccessToken(code);
         KakaoUserResponseDto userInfo = kakaoLoginService.getUserInfo(accessToken);
-        UserResponseDto userDto = userService.join(userInfo);
+        UserResponseDto userDto = userService.createUser(userInfo);
         return ResponseEntity.ok(userDto);
     }
 

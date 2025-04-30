@@ -1,32 +1,58 @@
 package com.Travelrithm.domain;
 
 
+import com.Travelrithm.dto.PlanRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+
+
+import lombok.*;
+import java.time.*;
 
 @Entity
-@Table(name = "travel_plan")
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Table(name = "travel_plan")
 public class PlanEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer plan_id;
+    private Integer planId;
 
-    private Integer user_id;
+    @ManyToOne(fetch = FetchType.LAZY) //.getUser 하기전에 객체를 불러오지 않음(지연로딩)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     private String region;
-    private LocalDate start_date;
-    private LocalDate end_date;
 
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalTime startTime;
     @Enumerated(EnumType.STRING)
     private TransportMode transportMode;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
-    private LocalTime start_time;
 
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+
+
+    public void update(PlanRequestDto planDto) {
+        this.region = planDto.getRegion();
+        this.startDate = planDto.getStartDate();
+        this.endDate = planDto.getEndDate();
+        this.transportMode = planDto.getTransportMode();
+        this.startTime = planDto.getStartTime();
+        this.updatedAt = LocalDateTime.now();
+
+
+    }
 }
+
+

@@ -20,14 +20,14 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public UserResponseDto join(KakaoUserResponseDto kakaoUserInfo) {
+    public UserResponseDto createUser(KakaoUserResponseDto kakaoUserInfo) {
         UserEntity userEntity= UserEntity.builder()
-                .social_id(kakaoUserInfo.id())
+                .socialId(kakaoUserInfo.id())
                 .name(kakaoUserInfo.kakao_account().name())
                 .email(kakaoUserInfo.kakao_account().email())
                 .nickname(kakaoUserInfo.kakao_account().profile().nickname())
-                .thumbnail_image_url(kakaoUserInfo.kakao_account().profile().thumbnail_image_url())
-                .created_at(LocalDateTime.now())
+                .thumbnailImageUrl(kakaoUserInfo.kakao_account().profile().thumbnail_image_url())
+                .createdAt(LocalDateTime.now())
                 .build();
         validateDuplicateEmail(userEntity);
         userRepository.save(userEntity);
@@ -35,13 +35,13 @@ public class UserService {
         return new UserResponseDto(userEntity);
     }
 
-    public UserResponseDto join(UserRequestDto localUserInfo) {
+    public UserResponseDto createUser(UserRequestDto localUserInfo) {
         UserEntity userEntity= UserEntity.builder()
                 .name(localUserInfo.getName())
                 .email(localUserInfo.getEmail())
                 .nickname(localUserInfo.getNickname())
-                .thumbnail_image_url(localUserInfo.getThumbnail_image_url())
-                .created_at(LocalDateTime.now())
+                .thumbnailImageUrl(localUserInfo.getThumbnail_image_url())
+                .createdAt(LocalDateTime.now())
                 .build();
         validateDuplicateEmail(userEntity);
         userRepository.save(userEntity);
@@ -55,6 +55,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
         return new UserResponseDto(user);
     }
+
     @Transactional(readOnly = true)
     public List<UserResponseDto> findAllUsers() {
         return userRepository.findAll().stream()

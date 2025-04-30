@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="users")
@@ -17,26 +19,29 @@ import java.time.LocalDateTime;
 public class UserEntity {
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer user_id;
+    private Integer userId;
     private String name;
     private String email;
     private String password;
     private String nickname;
 
-    @Enumerated(EnumType.STRING)
-    private SocialType social_type;
-    private Long social_id;
-    private String thumbnail_image_url;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
-    private LocalDateTime nickname_updated_at;
 
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+    private Long socialId;
+    private String thumbnailImageUrl;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime nicknameUpdatedAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<PlanEntity> travelPlans = new ArrayList<>();
     public void update(UserRequestDto dto) {
         this.name = dto.getName();
         this.password=dto.getPassword();
         this.email = dto.getEmail();
         this.nickname = dto.getNickname();
-        this.updated_at = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
 

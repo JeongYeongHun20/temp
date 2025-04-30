@@ -19,12 +19,12 @@ public class UserRequestDto {
     private LocalDateTime createdAt;
     private String thumbnail_image_url;
 
-    public UserRequestDto(UserEntity user) {
-        this.userId = user.getUser_id();
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.nickname = user.getNickname();
-        this.socialType = user.getSocial_type();
-        this.createdAt = user.getCreated_at();
+    public UserRequestDto(UserEntity userEntity) {
+        this.userId = userEntity.getUserId();
+        this.name = userEntity.getName();
+        this.email = userEntity.getEmail();
+        this.nickname = userEntity.getNickname();
+        this.socialType = userEntity.getSocialType();
+        this.createdAt = userEntity.getCreatedAt();
     }
 }
