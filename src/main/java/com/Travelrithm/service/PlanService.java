@@ -1,10 +1,13 @@
 package com.Travelrithm.service;
 
 
+import com.Travelrithm.domain.PlaceEntity;
 import com.Travelrithm.domain.PlanEntity;
+import com.Travelrithm.domain.UserEntity;
 import com.Travelrithm.dto.PlanRequestDto;
 import com.Travelrithm.dto.PlanResponseDto;
 import com.Travelrithm.repository.PlanRepository;
+import com.Travelrithm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +21,37 @@ import java.util.List;
 public class PlanService {
 
     private final PlanRepository planRepository;
-
+    private final UserRepository userRepository;
     public PlanResponseDto createPlan(PlanRequestDto planRequestDto){
+        UserEntity userEntity = userRepository.findById(planRequestDto.getUserId())
+                .orElseThrow(()-> new IllegalArgumentException("해당유저가 존재하지 않음"));
+
         PlanEntity planEntity=PlanEntity.builder()
-                .user(planRequestDto.getUser())
+                .userEntity(userEntity)
                 .region(planRequestDto.getRegion())
                 .startDate(planRequestDto.getStartDate())
                 .endDate(planRequestDto.getEndDate())
                 .createdAt(LocalDateTime.now())
+                .transportMode(planRequestDto.getTransportMode())
                 .startTime(planRequestDto.getStartTime())
                 .build();
+
+        List<PlaceEntity> createPlaces = planRequestDto.getPlacesDto().stream()
+                .map(dto -> PlaceEntity.builder()
+                        .placeName(dto.getPlaceName())
+                        .placeAddress(dto.getPlaceAddress())
+                        .lat(dto.getLat())
+                        .lng(dto.getLng())
+                        .memo(dto.getMemo())
+                        .day(dto.getDay())
+                        .sequence(dto.getSequence())
+                        .category(dto.getCategory())
+                        .planEntity(planEntity)
+                        .build()
+                ).toList();
+        planEntity.getPlaceEntities().addAll(createPlaces);
+
+
         planRepository.save(planEntity);
         return new PlanResponseDto(planEntity);
     }
@@ -52,6 +76,26 @@ public class PlanService {
                 .orElseThrow(() -> new IllegalArgumentException("해당플랜이 존재하지 않습니다"));
         planEntity.update(planDto);
 
+        //기존 place 전부 제거
+        planEntity.getPlaceEntities().clear();
+
+        List<PlaceEntity> updatePlaces = planDto.getPlacesDto().stream()
+                .map(dto -> PlaceEntity.builder()
+                        .placeName(dto.getPlaceName())
+                        .placeAddress(dto.getPlaceAddress())
+                        .lat(dto.getLat())
+                        .lng(dto.getLng())
+                        .memo(dto.getMemo())
+                        .day(dto.getDay())
+                        .sequence(dto.getSequence())
+                        .category(dto.getCategory())
+                        .planEntity(planEntity)  // 양방향 관계 설정
+                        .build()
+                ).toList();
+
+        //업데이트 된 place 저장
+        planEntity.getPlaceEntities().addAll(updatePlaces);
+        
         return new PlanResponseDto(planEntity);
     }
 

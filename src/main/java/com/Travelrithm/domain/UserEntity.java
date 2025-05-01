@@ -34,8 +34,8 @@ public class UserEntity {
     private LocalDateTime updatedAt;
     private LocalDateTime nicknameUpdatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<PlanEntity> travelPlans = new ArrayList<>();
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private List<PlanEntity> planEntities = new ArrayList<>();
     public void update(UserRequestDto dto) {
         this.name = dto.getName();
         this.password=dto.getPassword();

@@ -1,6 +1,7 @@
 package com.Travelrithm.domain;
 
 
+import com.Travelrithm.dto.PlaceDto;
 import com.Travelrithm.dto.PlanRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 
 import lombok.*;
 import java.time.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -28,7 +31,7 @@ public class PlanEntity {
 
     @ManyToOne(fetch = FetchType.LAZY) //.getUser 하기전에 객체를 불러오지 않음(지연로딩)
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private UserEntity userEntity;
 
     private String region;
 
@@ -41,6 +44,9 @@ public class PlanEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "planEntity", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<PlaceEntity> placeEntities = new ArrayList<>();
 
 
     public void update(PlanRequestDto planDto) {
@@ -50,6 +56,8 @@ public class PlanEntity {
         this.transportMode = planDto.getTransportMode();
         this.startTime = planDto.getStartTime();
         this.updatedAt = LocalDateTime.now();
+
+
 
 
     }
