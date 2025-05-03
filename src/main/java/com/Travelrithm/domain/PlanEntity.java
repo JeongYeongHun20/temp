@@ -48,16 +48,17 @@ public class PlanEntity {
     @Builder.Default
     private List<PlaceEntity> placeEntities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "planEntity", cascade = CascadeType.ALL)
+    private List<PostEntity> postEntities = new ArrayList<>();
 
     public void update(PlanRequestDto planDto) {
+
         this.region = planDto.getRegion();
         this.startDate = planDto.getStartDate();
         this.endDate = planDto.getEndDate();
         this.transportMode = planDto.getTransportMode();
         this.startTime = planDto.getStartTime();
         this.updatedAt = LocalDateTime.now();
-
-
 
 
     }
