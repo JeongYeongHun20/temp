@@ -36,19 +36,7 @@ public class PlanService {
                 .startTime(planRequestDto.getStartTime())
                 .build();
 
-        List<PlaceEntity> createPlaces = planRequestDto.getPlacesDto().stream()
-                .map(dto -> PlaceEntity.builder()
-                        .placeName(dto.getPlaceName())
-                        .placeAddress(dto.getPlaceAddress())
-                        .lat(dto.getLat())
-                        .lng(dto.getLng())
-                        .memo(dto.getMemo())
-                        .day(dto.getDay())
-                        .sequence(dto.getSequence())
-                        .category(dto.getCategory())
-                        .planEntity(planEntity)
-                        .build()
-                ).toList();
+        List<PlaceEntity> createPlaces = getPlaceEntities(planRequestDto, planEntity);
         planEntity.getPlaceEntities().addAll(createPlaces);
 
 
@@ -79,7 +67,16 @@ public class PlanService {
         //기존 place 전부 제거
         planEntity.getPlaceEntities().clear();
 
-        List<PlaceEntity> updatePlaces = planDto.getPlacesDto().stream()
+        List<PlaceEntity> updatePlaces = getPlaceEntities(planDto, planEntity);
+
+        //업데이트 된 place 저장
+        planEntity.getPlaceEntities().addAll(updatePlaces);
+        
+        return new PlanResponseDto(planEntity);
+    }
+
+    private static List<PlaceEntity> getPlaceEntities(PlanRequestDto planDto, PlanEntity planEntity) {
+        return planDto.getPlacesDto().stream()
                 .map(dto -> PlaceEntity.builder()
                         .placeName(dto.getPlaceName())
                         .placeAddress(dto.getPlaceAddress())
@@ -92,11 +89,6 @@ public class PlanService {
                         .planEntity(planEntity)  // 양방향 관계 설정
                         .build()
                 ).toList();
-
-        //업데이트 된 place 저장
-        planEntity.getPlaceEntities().addAll(updatePlaces);
-        
-        return new PlanResponseDto(planEntity);
     }
 
     public void deletePlan(Integer planId){
