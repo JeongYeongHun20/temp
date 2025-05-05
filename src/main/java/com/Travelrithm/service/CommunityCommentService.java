@@ -1,0 +1,41 @@
+package com.Travelrithm.service;
+
+import com.Travelrithm.domain.CommunityCommentEntity;
+import com.Travelrithm.dto.CommunityCommentRequestDto;
+import com.Travelrithm.dto.CommunityCommentResponseDto;
+import com.Travelrithm.repository.CommunityCommentRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class CommunityCommentService {
+
+    private final CommunityCommentRepository commentRepository;
+
+    public CommunityCommentResponseDto createComment(CommunityCommentRequestDto request) {
+        CommunityCommentEntity entity = request.toEntity();
+        return new CommunityCommentResponseDto(commentRepository.save(entity));
+    }
+
+    public List<CommunityCommentResponseDto> getCommentsByPostId(Integer postId) {
+        return commentRepository.findByPostId(postId)
+                .stream()
+                .map(CommunityCommentResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    public CommunityCommentResponseDto updateComment(Integer id, CommunityCommentRequestDto request) {
+        CommunityCommentEntity entity = commentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+        entity.update(request.getCommentContent());
+        return new CommunityCommentResponseDto(entity);
+    }
+
+    public void deleteComment(Integer id) {
+        commentRepository.deleteById(id);
+    }
+}
