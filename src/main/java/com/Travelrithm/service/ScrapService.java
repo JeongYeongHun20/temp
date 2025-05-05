@@ -26,7 +26,7 @@ public class ScrapService {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
         PostEntity postEntity = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("플랜 존재하지 않음"));
+                .orElseThrow(() -> new IllegalArgumentException("게시물 존재하지 않음"));
         ScrapEntity scrapEntity = ScrapEntity.builder()
                 .userEntity(userEntity)
                 .postEntity(postEntity)
@@ -35,11 +35,11 @@ public class ScrapService {
 
         scrapRepository.save(scrapEntity);
     }
-    public void removeScrap(Integer userId, Integer planId) {
+    public void removeScrap(Integer userId, Integer postId) {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
-        PostEntity postEntity = postRepository.findById(planId)
-                .orElseThrow(() -> new IllegalArgumentException("플랜 존재하지 않음"));
+        PostEntity postEntity = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물 존재하지 않음"));
         ScrapEntity scrap = scrapRepository.findByUserEntityAndPostEntity(userEntity,postEntity);
         scrapRepository.delete(scrap);
     }
