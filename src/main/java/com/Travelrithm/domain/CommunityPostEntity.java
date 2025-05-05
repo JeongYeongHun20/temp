@@ -1,17 +1,18 @@
 package com.Travelrithm.domain;
 
+import com.Travelrithm.dto.CommunityPostRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "community_post")
 public class CommunityPostEntity {
@@ -20,27 +21,32 @@ public class CommunityPostEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer postId;
 
-    private Integer userId;
+    @OneToMany(mappedBy = "postEntity", cascade = CascadeType.ALL)
+    private List<ScrapEntity> scrapEntities;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
 
     private String title;
 
-    @Column(name = "post_content", columnDefinition = "TEXT")
     private String postContent;
 
-    private Boolean isTravelPlan;
-
-    private Integer planId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id")
+    private PlanEntity planEntity;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
-
-    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public void update(String title, String postContent, Boolean isTravelPlan, Integer planId) {
-        this.title = title;
-        this.postContent = postContent;
-        this.isTravelPlan = isTravelPlan;
-        this.planId = planId;
+    private Boolean isTravelPlan;
+
+    public void update(CommunityPostRequestDto requestDto, PlanEntity planEntity) {
+        this.title = requestDto.title();
+        this.postContent = requestDto.postContent();
+        this.isTravelPlan = requestDto.isTravelPlan();
+        this.planEntity = planEntity;
     }
+
 }

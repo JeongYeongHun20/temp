@@ -24,7 +24,7 @@ public class ScrapEntity {
 
     @ManyToOne(fetch = FetchType.LAZY) //.getUser 하기전에 객체를 불러오지 않음(지연로딩)
     @JoinColumn(name = "post_id")
-    private PostEntity postEntity;
+    private CommunityPostEntity postEntity;
 
 
 

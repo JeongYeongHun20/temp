@@ -41,6 +41,7 @@ public class PlanEntity {
     @Enumerated(EnumType.STRING)
     private TransportMode transportMode;
 
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -49,19 +50,19 @@ public class PlanEntity {
     private List<PlaceEntity> placeEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "planEntity", cascade = CascadeType.ALL)
-    private List<PostEntity> postEntities = new ArrayList<>();
+    private List<CommunityPostEntity> postEntities = new ArrayList<>();
 
     public void update(PlanRequestDto planDto) {
 
-        this.region = planDto.getRegion();
-        this.startDate = planDto.getStartDate();
-        this.endDate = planDto.getEndDate();
-        this.transportMode = planDto.getTransportMode();
-        this.startTime = planDto.getStartTime();
+        this.region = planDto.region();
+        this.startDate = planDto.startDate();
+        this.endDate = planDto.endDate();
+        this.transportMode = planDto.transportMode();
+        this.startTime = planDto.startTime();
         this.updatedAt = LocalDateTime.now();
 
-
     }
+
 }
 
 

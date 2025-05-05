@@ -22,18 +22,19 @@ public class PlanService {
 
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
+
     public PlanResponseDto createPlan(PlanRequestDto planRequestDto){
-        UserEntity userEntity = userRepository.findById(planRequestDto.getUserId())
+        UserEntity userEntity = userRepository.findById(planRequestDto.userId())
                 .orElseThrow(()-> new IllegalArgumentException("해당유저가 존재하지 않음"));
 
         PlanEntity planEntity=PlanEntity.builder()
                 .userEntity(userEntity)
-                .region(planRequestDto.getRegion())
-                .startDate(planRequestDto.getStartDate())
-                .endDate(planRequestDto.getEndDate())
+                .region(planRequestDto.region())
+                .startDate(planRequestDto.startDate())
+                .endDate(planRequestDto.endDate())
                 .createdAt(LocalDateTime.now())
-                .transportMode(planRequestDto.getTransportMode())
-                .startTime(planRequestDto.getStartTime())
+                .transportMode(planRequestDto.transportMode())
+                .startTime(planRequestDto.startTime())
                 .build();
 
         List<PlaceEntity> createPlaces = getPlaceEntities(planRequestDto, planEntity);
@@ -76,16 +77,16 @@ public class PlanService {
     }
 
     private static List<PlaceEntity> getPlaceEntities(PlanRequestDto planDto, PlanEntity planEntity) {
-        return planDto.getPlacesDto().stream()
+        return planDto.placesDto().stream()
                 .map(dto -> PlaceEntity.builder()
-                        .placeName(dto.getPlaceName())
-                        .placeAddress(dto.getPlaceAddress())
-                        .lat(dto.getLat())
-                        .lng(dto.getLng())
-                        .memo(dto.getMemo())
-                        .day(dto.getDay())
-                        .sequence(dto.getSequence())
-                        .category(dto.getCategory())
+                        .placeName(dto.placeName())
+                        .placeAddress(dto.placeAddress())
+                        .lat(dto.lat())
+                        .lng(dto.lng())
+                        .memo(dto.memo())
+                        .day(dto.day())
+                        .sequence(dto.sequence())
+                        .category(dto.category())
                         .planEntity(planEntity)  // 양방향 관계 설정
                         .build()
                 ).toList();

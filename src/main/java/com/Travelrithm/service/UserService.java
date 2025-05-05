@@ -37,10 +37,10 @@ public class UserService {
 
     public UserResponseDto createUser(UserRequestDto localUserInfo) {
         UserEntity userEntity= UserEntity.builder()
-                .name(localUserInfo.getName())
-                .email(localUserInfo.getEmail())
-                .nickname(localUserInfo.getNickname())
-                .thumbnailImageUrl(localUserInfo.getThumbnail_image_url())
+                .name(localUserInfo.name())
+                .email(localUserInfo.email())
+                .nickname(localUserInfo.nickname())
+                .thumbnailImageUrl(localUserInfo.thumbnail_image_url())
                 .createdAt(LocalDateTime.now())
                 .build();
         validateDuplicateEmail(userEntity);

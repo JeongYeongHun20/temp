@@ -6,12 +6,14 @@ import com.Travelrithm.dto.CommunityCommentResponseDto;
 import com.Travelrithm.repository.CommunityCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class CommunityCommentService {
 
     private final CommunityCommentRepository commentRepository;
@@ -28,8 +30,8 @@ public class CommunityCommentService {
                 .collect(Collectors.toList());
     }
 
-    public CommunityCommentResponseDto updateComment(Integer id, CommunityCommentRequestDto request) {
-        CommunityCommentEntity entity = commentRepository.findById(id)
+    public CommunityCommentResponseDto updateComment(Integer postId, CommunityCommentRequestDto request) {
+        CommunityCommentEntity entity = commentRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
         entity.update(request.getCommentContent());
         return new CommunityCommentResponseDto(entity);

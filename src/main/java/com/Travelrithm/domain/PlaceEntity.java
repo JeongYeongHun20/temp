@@ -23,6 +23,7 @@ public class PlaceEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id", nullable = false)
     private PlanEntity planEntity;
+
     private String placeName;
     private String placeAddress;
     private BigDecimal lat;
