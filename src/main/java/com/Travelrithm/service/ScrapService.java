@@ -4,6 +4,7 @@ import com.Travelrithm.domain.CommunityPostEntity;
 
 import com.Travelrithm.domain.ScrapEntity;
 import com.Travelrithm.domain.UserEntity;
+import com.Travelrithm.dto.ScrapDto;
 import com.Travelrithm.repository.CommunityPostRepository;
 
 import com.Travelrithm.repository.ScrapRepository;
@@ -22,7 +23,7 @@ public class ScrapService {
     private final CommunityPostRepository communityPostRepository;
     private final ScrapRepository scrapRepository;
 
-    public void createScrap(Integer userId, Integer postId) {
+    public ScrapDto createScrap(Integer userId, Integer postId) {
         UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("유저 존재하지 않음"));
         CommunityPostEntity postEntity = communityPostRepository.findById(postId)
@@ -33,7 +34,7 @@ public class ScrapService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        scrapRepository.save(scrapEntity);
+        return new ScrapDto(scrapRepository.save(scrapEntity));
     }
     public void removeScrap(Integer userId, Integer postId) {
         UserEntity userEntity = userRepository.findById(userId)

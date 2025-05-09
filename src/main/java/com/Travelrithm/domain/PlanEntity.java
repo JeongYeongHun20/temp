@@ -50,6 +50,7 @@ public class PlanEntity {
     private List<PlaceEntity> placeEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "planEntity", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<CommunityPostEntity> postEntities = new ArrayList<>();
 
     public void update(PlanRequestDto planDto) {

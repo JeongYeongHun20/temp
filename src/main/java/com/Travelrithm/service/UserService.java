@@ -7,6 +7,7 @@ import com.Travelrithm.dto.UserRequestDto;
 import com.Travelrithm.dto.UserResponseDto;
 import com.Travelrithm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     public UserResponseDto createUser(KakaoUserResponseDto kakaoUserInfo) {
         UserEntity userEntity= UserEntity.builder()
                 .socialId(kakaoUserInfo.id())
@@ -36,10 +37,12 @@ public class UserService {
     }
 
     public UserResponseDto createUser(UserRequestDto localUserInfo) {
-        UserEntity userEntity= UserEntity.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .name(localUserInfo.name())
+                .password(bCryptPasswordEncoder.encode(localUserInfo.password()))
                 .email(localUserInfo.email())
                 .nickname(localUserInfo.nickname())
+                .socialType(localUserInfo.socialType())
                 .thumbnailImageUrl(localUserInfo.thumbnail_image_url())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -61,15 +64,14 @@ public class UserService {
         return userRepository.findAll().stream()
                 .map(UserResponseDto::new)
                 .toList();
-        //추후 필요할 시 paging 기법으로 분할
     }
 
     public void deleteUser(Integer id){
         userRepository.deleteById(id);
     }
 
-    public UserResponseDto updateUser(Integer id, UserRequestDto updatedUserDto){
-        UserEntity userEntity = userRepository.findById(id)
+    public UserResponseDto updateUser(Integer userId, UserRequestDto updatedUserDto){
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자 입니다"));
         userEntity.update(updatedUserDto);
         return new UserResponseDto(userEntity);

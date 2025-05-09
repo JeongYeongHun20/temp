@@ -2,24 +2,27 @@ package com.Travelrithm.controller;
 
 import com.Travelrithm.dto.UserRequestDto;
 import com.Travelrithm.dto.UserResponseDto;
+import com.Travelrithm.security.jwt.CustomUserDetails;
 import com.Travelrithm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
 
 
     @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userRequestDto) {
+        System.out.println(userRequestDto.name());
+        return ResponseEntity.ok(userService.createUser(userRequestDto));
     }
 
 
@@ -28,15 +31,17 @@ public class UserController {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable(name = "id") Integer id) {
-        return ResponseEntity.ok(userService.findUser(id));
+    @GetMapping("/myPage")
+    public ResponseEntity<UserResponseDto> getUserById(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
+        return ResponseEntity.ok(userService.findUser(userId));
     }
 
 
-    @PutMapping("/{id}") //전체 수정
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable(name="id") Integer id, @RequestBody UserRequestDto user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
+    @PutMapping("/update") //전체 수정
+    public ResponseEntity<UserResponseDto> updateUser(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UserRequestDto userRequestDto) {
+        Integer userId = userDetails.getUserId();
+        return ResponseEntity.ok(userService.updateUser(userId, userRequestDto));
     }
     /*
     @PatchMapping("/{id}") //부분 수정(추후 추가)
@@ -45,9 +50,10 @@ public class UserController {
     }
      */
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
-        userService.deleteUser(id);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Integer userId = userDetails.getUserId();
+        userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 }

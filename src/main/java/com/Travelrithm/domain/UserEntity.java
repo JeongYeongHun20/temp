@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name="users")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)// Builder로만 접근 가능
+@NoArgsConstructor(access = AccessLevel.PROTECTED)// jpa사용하기위하여, Builder로만 접근 가능
 @AllArgsConstructor
 @Builder
 public class UserEntity {
@@ -25,6 +25,7 @@ public class UserEntity {
     private String password;
     private String nickname;
 
+    private String role;
 
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
@@ -35,6 +36,7 @@ public class UserEntity {
     private LocalDateTime nicknameUpdatedAt;
 
     @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    @Builder.Default
     private List<PlanEntity> planEntities = new ArrayList<>();
 
     public void update(UserRequestDto dto) {

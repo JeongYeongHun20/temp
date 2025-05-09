@@ -2,8 +2,10 @@ package com.Travelrithm.controller;
 
 import com.Travelrithm.dto.CommunityCommentRequestDto;
 import com.Travelrithm.dto.CommunityCommentResponseDto;
+import com.Travelrithm.security.jwt.CustomUserDetails;
 import com.Travelrithm.service.CommunityCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,7 +18,11 @@ public class CommunityCommentController {
     private final CommunityCommentService commentService;
 
     @PostMapping
-    public CommunityCommentResponseDto create(@RequestBody CommunityCommentRequestDto request) {
+    public CommunityCommentResponseDto create(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody CommunityCommentRequestDto request) {
+        Integer userId = userDetails.getUserId();
+        request.setUserId(userId); //나중에 수정해야함
         return commentService.createComment(request);
     }
 

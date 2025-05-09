@@ -4,6 +4,7 @@ package com.Travelrithm.service;
 import com.Travelrithm.domain.PlaceEntity;
 import com.Travelrithm.domain.PlanEntity;
 import com.Travelrithm.domain.UserEntity;
+import com.Travelrithm.dto.PlaceDto;
 import com.Travelrithm.dto.PlanRequestDto;
 import com.Travelrithm.dto.PlanResponseDto;
 import com.Travelrithm.repository.PlanRepository;
@@ -23,8 +24,8 @@ public class PlanService {
     private final PlanRepository planRepository;
     private final UserRepository userRepository;
 
-    public PlanResponseDto createPlan(PlanRequestDto planRequestDto){
-        UserEntity userEntity = userRepository.findById(planRequestDto.userId())
+    public PlanResponseDto createPlan(Integer userId, PlanRequestDto planRequestDto){
+        UserEntity userEntity = userRepository.findById(userId)
                 .orElseThrow(()-> new IllegalArgumentException("해당유저가 존재하지 않음"));
 
         PlanEntity planEntity=PlanEntity.builder()
@@ -54,8 +55,8 @@ public class PlanService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlanResponseDto> findPlans(){
-        return planRepository.findAll().stream()
+    public List<PlanResponseDto> findPlans(Integer userId){
+        return planRepository.findAllByUserEntity_UserId(userId).stream()
                 .map(PlanResponseDto::new)
                 .toList();
     }
@@ -75,6 +76,7 @@ public class PlanService {
         
         return new PlanResponseDto(planEntity);
     }
+
 
     private static List<PlaceEntity> getPlaceEntities(PlanRequestDto planDto, PlanEntity planEntity) {
         return planDto.placesDto().stream()

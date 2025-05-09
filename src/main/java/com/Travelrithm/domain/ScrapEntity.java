@@ -2,10 +2,7 @@ package com.Travelrithm.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +11,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class ScrapEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer scrapId;

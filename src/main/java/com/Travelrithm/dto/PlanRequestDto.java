@@ -11,7 +11,6 @@ import java.util.List;
 
 
 public record PlanRequestDto(
-        Integer userId,
         String region,
         LocalDate startDate,
         LocalDate endDate,
